@@ -1,0 +1,46 @@
+{
+  "name": "car-demo-backend-tests",
+  "version": "1.0.0",
+  "description": "Test suite for car demo backend services",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests --testNamePattern='(?!.*integration)'",
+    "test:integration": "jest --testPathPattern=e2e",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:b1": "jest --testPathPattern=B1-web-server/tests",
+    "test:b2": "jest --testPathPattern=B2-iot-gateway/tests", 
+    "test:c2": "jest --testPathPattern=C2-central-broker/tests",
+    "test:e2e": "jest --testPathPattern=e2e --runInBand",
+    "test:all": "npm run test:unit && npm run test:e2e"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 30000,
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/node_modules/**",
+      "!**/tests/**",
+      "!**/coverage/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    },
+    "testMatch": [
+      "**/tests/**/*.test.js",
+      "**/e2e/**/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "mongodb-memory-server": "^9.1.3",
+    "ws": "^8.14.2"
+  }
+}

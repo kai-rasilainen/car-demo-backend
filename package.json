@@ -1,5 +1,5 @@
 {
-  "name": "car-demo-backend", 
+  "name": "car-demo-backend",
   "version": "1.0.0",
   "description": "Backend services for car demo system",
   "private": true,
@@ -7,16 +7,26 @@
     "install-all": "cd B1-web-server && npm install && cd ../B2-iot-gateway && npm install",
     "dev-all": "concurrently \"npm run dev:b1\" \"npm run dev:b2\"",
     "dev:b1": "cd B1-web-server && npm run dev",
-    "dev:b2": "cd B2-iot-gateway && npm run dev", 
+    "dev:b2": "cd B2-iot-gateway && npm run dev",
     "start-all": "concurrently \"npm run start:b1\" \"npm run start:b2\"",
     "start:b1": "cd B1-web-server && npm start",
     "start:b2": "cd B2-iot-gateway && npm start",
     "db:start": "docker-compose up -d",
     "db:stop": "docker-compose down",
     "db:reset": "docker-compose down -v && docker-compose up -d",
-    "db:logs": "docker-compose logs -f"
+    "db:logs": "docker-compose logs -f",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests --testNamePattern='(?!.*integration)'",
+    "test:b1": "jest --testPathPattern=B1-web-server/tests",
+    "test:b2": "jest --testPathPattern=B2-iot-gateway/tests",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.3.0",
+    "supertest": "^7.1.4",
+    "ws": "^8.18.3"
   }
 }
