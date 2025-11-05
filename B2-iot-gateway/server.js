@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3002;
-const WS_PORT = process.env.WS_PORT || 8080;
+const WS_PORT = process.env.WS_PORT || 8081;
 
 // Middleware
 app.use(cors());
