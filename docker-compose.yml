@@ -1,0 +1,42 @@
+services:
+  # B3 - Real-time Database (MongoDB)
+  mongodb:
+    image: mongo:7.0
+    container_name: car-data-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: cardata
+    volumes:
+      - mongodb_data:/data/db
+      - ./B3-realtime-database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - backend-network
+
+  # B4 - Static Database (PostgreSQL)
+  postgres:
+    image: postgres:15
+    container_name: car-info-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: carinfo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./B4-static-database/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - backend-network
+
+volumes:
+  mongodb_data:
+  postgres_data:
+
+networks:
+  backend-network:
+    driver: bridge

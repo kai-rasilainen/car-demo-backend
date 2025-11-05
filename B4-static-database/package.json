@@ -1,0 +1,15 @@
+{
+  "name": "car-info-database",
+  "version": "1.0.0",
+  "description": "PostgreSQL database utilities for static car information",
+  "main": "queries.js",
+  "scripts": {
+    "test": "node test-queries.js",
+    "migrate": "node migrations.js",
+    "seed": "node seed-data.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.0",
+    "dotenv": "^16.3.0"
+  }
+}

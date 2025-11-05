@@ -1,0 +1,14 @@
+{
+  "name": "car-data-queries",
+  "version": "1.0.0",
+  "description": "Database queries and utilities for car real-time data",
+  "main": "queries.js",
+  "scripts": {
+    "test": "node test-queries.js",
+    "setup": "node setup-db.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.0.0",
+    "dotenv": "^16.3.0"
+  }
+}

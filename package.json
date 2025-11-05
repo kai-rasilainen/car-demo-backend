@@ -1,0 +1,22 @@
+{
+  "name": "car-demo-backend", 
+  "version": "1.0.0",
+  "description": "Backend services for car demo system",
+  "private": true,
+  "scripts": {
+    "install-all": "cd B1-web-server && npm install && cd ../B2-iot-gateway && npm install",
+    "dev-all": "concurrently \"npm run dev:b1\" \"npm run dev:b2\"",
+    "dev:b1": "cd B1-web-server && npm run dev",
+    "dev:b2": "cd B2-iot-gateway && npm run dev", 
+    "start-all": "concurrently \"npm run start:b1\" \"npm run start:b2\"",
+    "start:b1": "cd B1-web-server && npm start",
+    "start:b2": "cd B2-iot-gateway && npm start",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down",
+    "db:reset": "docker-compose down -v && docker-compose up -d",
+    "db:logs": "docker-compose logs -f"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
