@@ -3,14 +3,58 @@ const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const { Client } = require('pg');
 const redis = require('redis');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Car Demo B1 Web Server API',
+      version: '1.0.0',
+      description: 'REST API for Car Demo System - Web Server providing car data and command interface',
+      contact: {
+        name: 'API Support',
+        email: 'support@cardemo.com'
+      }
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+        description: 'Development server'
+      }
+    ],
+    tags: [
+      {
+        name: 'Health',
+        description: 'Health check endpoints'
+      },
+      {
+        name: 'Cars',
+        description: 'Car data and management endpoints'
+      },
+      {
+        name: 'Commands',
+        description: 'Send commands to cars'
+      }
+    ]
+  },
+  apis: ['./server.js'] // Path to the API routes
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Database connections
 let mongoClient, pgClient, redisClient;
@@ -86,7 +130,83 @@ const mockCarData = {
   }
 };
 
-// Get car data by license plate
+/**
+ * @swagger
+ * /api/car/{licensePlate}:
+ *   get:
+ *     summary: Get car data by license plate
+ *     description: Retrieves real-time and static data for a specific car. Combines data from MongoDB (real-time sensor data) and PostgreSQL (static car information).
+ *     tags: [Cars]
+ *     parameters:
+ *       - in: path
+ *         name: licensePlate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: ABC-123
+ *         description: The license plate number of the car
+ *     responses:
+ *       200:
+ *         description: Car data successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 licensePlate:
+ *                   type: string
+ *                   example: ABC-123
+ *                 owner:
+ *                   type: string
+ *                   example: John Doe
+ *                 lastService:
+ *                   type: string
+ *                   format: date
+ *                   example: 2024-10-15
+ *                 indoorTemp:
+ *                   type: number
+ *                   format: float
+ *                   example: 23.5
+ *                   description: Indoor temperature in Celsius (1 decimal precision)
+ *                 outdoorTemp:
+ *                   type: number
+ *                   format: float
+ *                   example: 14.2
+ *                   description: Outdoor temperature in Celsius (1 decimal precision)
+ *                 gps:
+ *                   type: object
+ *                   properties:
+ *                     lat:
+ *                       type: number
+ *                       example: 60.1699
+ *                     lng:
+ *                       type: number
+ *                       example: 24.9384
+ *                 lastUpdated:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2025-11-07T06:49:35.014Z
+ *       404:
+ *         description: Car not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Car not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
+ */
 app.get('/api/car/:licensePlate', async (req, res) => {
   try {
     const { licensePlate } = req.params;
@@ -147,7 +267,79 @@ app.get('/api/car/:licensePlate', async (req, res) => {
   }
 });
 
-// Send command to car
+/**
+ * @swagger
+ * /api/car/{licensePlate}/command:
+ *   post:
+ *     summary: Send command to a car
+ *     description: Sends a command to a specific car via Redis message broker. Commands can control various car functions like AC, engine, locks, etc.
+ *     tags: [Commands]
+ *     parameters:
+ *       - in: path
+ *         name: licensePlate
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: ABC-123
+ *         description: The license plate number of the car
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - command
+ *             properties:
+ *               command:
+ *                 type: string
+ *                 example: start_ac
+ *                 description: The command to send to the car
+ *                 enum:
+ *                   - start_ac
+ *                   - stop_ac
+ *                   - lock_doors
+ *                   - unlock_doors
+ *                   - start_engine
+ *                   - stop_engine
+ *     responses:
+ *       200:
+ *         description: Command sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Command sent successfully
+ *                 command:
+ *                   type: string
+ *                   example: start_ac
+ *                 licensePlate:
+ *                   type: string
+ *                   example: ABC-123
+ *       400:
+ *         description: Bad request - missing command
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Command is required
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
+ */
 app.post('/api/car/:licensePlate/command', async (req, res) => {
   try {
     const { licensePlate } = req.params;
@@ -180,7 +372,44 @@ app.post('/api/car/:licensePlate/command', async (req, res) => {
   }
 });
 
-// Get all cars (for staff dashboard)
+/**
+ * @swagger
+ * /api/cars:
+ *   get:
+ *     summary: Get all cars
+ *     description: Retrieves a list of all cars in the system with basic information. Used for staff dashboard.
+ *     tags: [Cars]
+ *     responses:
+ *       200:
+ *         description: List of cars successfully retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   licensePlate:
+ *                     type: string
+ *                     example: ABC-123
+ *                   owner:
+ *                     type: string
+ *                     example: John Doe
+ *                   lastService:
+ *                     type: string
+ *                     format: date
+ *                     example: 2024-10-15
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Internal server error
+ */
 app.get('/api/cars', async (req, res) => {
   try {
     let cars = [];
@@ -208,7 +437,38 @@ app.get('/api/cars', async (req, res) => {
   }
 });
 
-// Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     description: Returns the health status of the server and all database connections
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: Server health status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 server:
+ *                   type: string
+ *                   example: ok
+ *                 mongodb:
+ *                   type: string
+ *                   example: connected
+ *                 postgresql:
+ *                   type: string
+ *                   example: connected
+ *                 redis:
+ *                   type: string
+ *                   example: connected
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                   example: 2025-11-07T12:00:00.000Z
+ */
 app.get('/health', (req, res) => {
   const status = {
     server: 'ok',
