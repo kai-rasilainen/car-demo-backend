@@ -18,7 +18,7 @@ app.use(express.json());
 let mongoClient, redisClient, mqttClient;
 
 // MongoDB connection (B3 - Store data)
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://admin:password@localhost:27017';
 const MONGO_DB = 'cardata';
 
 // Redis connection (C2 - Communication)

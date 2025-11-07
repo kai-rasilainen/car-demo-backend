@@ -16,7 +16,7 @@ app.use(express.json());
 let mongoClient, pgClient, redisClient;
 
 // MongoDB connection (B3 - Real-time data)
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017';
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://admin:password@localhost:27017';
 const MONGO_DB = 'cardata';
 
 // PostgreSQL connection (B4 - Static data)
@@ -114,8 +114,8 @@ app.get('/api/car/:licensePlate', async (req, res) => {
           licensePlate,
           owner: staticData.owner_name,
           lastService: staticData.last_service,
-          indoorTemp: realtimeData.indoorTemp,
-          outdoorTemp: realtimeData.outdoorTemp,
+          indoorTemp: parseFloat(realtimeData.indoorTemp.toFixed(1)),
+          outdoorTemp: parseFloat(realtimeData.outdoorTemp.toFixed(1)),
           gps: realtimeData.gps,
           lastUpdated: realtimeData.timestamp
         };
@@ -129,8 +129,8 @@ app.get('/api/car/:licensePlate', async (req, res) => {
         // Add some random variation to temperatures for demo
         carData = {
           ...carData,
-          indoorTemp: carData.indoorTemp + (Math.random() - 0.5) * 2,
-          outdoorTemp: carData.outdoorTemp + (Math.random() - 0.5) * 3,
+          indoorTemp: parseFloat((carData.indoorTemp + (Math.random() - 0.5) * 2).toFixed(1)),
+          outdoorTemp: parseFloat((carData.outdoorTemp + (Math.random() - 0.5) * 3).toFixed(1)),
           lastUpdated: new Date().toISOString()
         };
       }
