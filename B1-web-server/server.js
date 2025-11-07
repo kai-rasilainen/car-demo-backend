@@ -17,7 +17,7 @@ let mongoClient, pgClient, redisClient;
 
 // MongoDB connection (B3 - Real-time data)
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://admin:password@localhost:27017';
-const MONGO_DB = 'cardata';
+const MONGO_DB = process.env.MONGO_DB || 'cardata';
 
 // PostgreSQL connection (B4 - Static data)
 const PG_CONFIG = {

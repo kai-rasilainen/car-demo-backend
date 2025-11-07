@@ -19,7 +19,7 @@ let mongoClient, redisClient, mqttClient;
 
 // MongoDB connection (B3 - Store data)
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://admin:password@localhost:27017';
-const MONGO_DB = 'cardata';
+const MONGO_DB = process.env.MONGO_DB || 'cardata';
 
 // Redis connection (C2 - Communication)
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
