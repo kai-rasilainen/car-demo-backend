@@ -1,0 +1,60 @@
+code: B4
+name: static-database
+
+description: |
+  PostgreSQL database for storing static car information and service records.
+
+  Tables:
+  - cars: Vehicle master data (make, model, owner, license plate)
+  - service_records: Maintenance history
+  - insurance: Insurance policy information
+  - rental_info: Rental agreements and pricing
+
+  Features:
+  - Normalized relational schema with foreign keys
+  - car_summary view for combined queries
+  - Sample data for 5 demo cars
+  - Docker containerized deployment
+  - Automatic initialization with demo data
+
+  Schema:
+  cars (5 records):
+    - license_plate (PK)
+    - make, model, year, color
+    - owner_name, owner_contact
+    - vin, registration_date
+
+  service_records:
+    - Linked to cars via license_plate (FK)
+    - service_date, service_type, mileage
+    - description, cost, service_provider
+
+  insurance:
+    - Linked to cars via license_plate (FK)
+    - policy_number, provider, start/end dates
+    - coverage_type, premium
+
+  rental_info:
+    - Linked to cars via license_plate (FK)
+    - rental_status, daily_rate, deposit
+    - current_renter info, rental dates
+
+  Built with:
+  - PostgreSQL 15
+  - Docker container
+  - Port: 5432
+  - Persistent volume: postgres_data
+
+  Main files:
+  - docker-compose.yml
+  - init.sql (schema and sample data)
+
+  Extra:
+  - Contains static reference data that changes infrequently
+  - Complements B3's real-time data with master data
+  - car_summary view joins cars with latest service/insurance/rental info
+
+linkingProjects:
+  - ../B1-web-server
+
+extraInfo: []

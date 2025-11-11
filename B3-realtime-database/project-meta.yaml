@@ -1,0 +1,52 @@
+code: B3
+name: realtime-database
+
+description: |
+  MongoDB database for storing real-time sensor data and command history from cars.
+
+  Collections:
+  - car_data: Time-series sensor readings (temperature, GPS, speed)
+  - car_commands: Command history and execution status
+
+  Features:
+  - Time-series optimized with compound indexes
+  - 30-day automatic data retention on sensor data
+  - Efficient queries for latest data and historical ranges
+  - Command tracking with timestamps
+  - Docker containerized deployment
+
+  Schema:
+  car_data:
+    - licensePlate (indexed)
+    - timestamp (indexed, TTL enabled)
+    - outdoorTemp, indoorTemp
+    - location (lat, lon)
+    - speed, rpm, batteryVoltage
+    - doorLocked, engineRunning
+
+  car_commands:
+    - licensePlate (indexed)
+    - command (type and parameters)
+    - timestamp
+    - status (sent, acknowledged, executed)
+
+  Built with:
+  - MongoDB 4.4
+  - Docker container
+  - Port: 27017
+  - Persistent volume: mongodb_data
+
+  Main files:
+  - docker-compose.yml
+  - init-db.js (initialization script)
+
+  Extra:
+  - Optimized for high-frequency writes from IoT devices
+  - Compound indexes on (licensePlate, timestamp) for fast queries
+  - TTL index for automatic old data cleanup (30 days)
+
+linkingProjects:
+  - ../B1-web-server
+  - ../B2-iot-gateway
+
+extraInfo: []

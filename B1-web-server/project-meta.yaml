@@ -1,0 +1,38 @@
+code: B1
+name: web-server
+
+description: |
+  Express.js REST API server providing unified backend for frontend applications.
+
+  Features:
+  - RESTful API endpoints for car data retrieval
+  - Combines real-time sensor data (MongoDB) with static car information (PostgreSQL)
+  - Interactive Swagger/OpenAPI documentation at /api-docs
+  - Mock data fallback for demo purposes
+  - CORS enabled for frontend apps
+  - Health check endpoint
+
+  API Endpoints:
+  - GET /cars/:licensePlate - Get car details with latest sensor data
+  - GET /cars/:licensePlate/temperature-history - Get 24h temperature history
+  - POST /cars/:licensePlate/commands - Send commands to cars
+
+  Built with:
+  - Express.js
+  - MongoDB client (connects to B3)
+  - PostgreSQL client (connects to B4)
+  - Swagger UI for API documentation
+  - Port: 3001
+
+  Main files:
+  - server.js (main server and API routes)
+  - package.json
+
+linkingProjects:
+  - ../B3-realtime-database
+  - ../B4-static-database
+  - ../../A-car-demo-frontend/A1-car-user-app
+  - ../../A-car-demo-frontend/A2-rental-staff-app
+
+extraInfo:
+  - ./API_DOCS.md

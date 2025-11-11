@@ -1,0 +1,48 @@
+code: B2
+name: iot-gateway
+
+description: |
+  Node.js IoT Gateway for real-time communication between cars and backend systems.
+
+  Features:
+  - WebSocket server for persistent car connections (port 8081)
+  - REST API for command management (port 3002)
+  - Real-time sensor data ingestion from cars
+  - Command forwarding to connected vehicles
+  - Data persistence to MongoDB (B3)
+  - Redis pub/sub for event broadcasting
+  - MQTT cloud integration support
+  - Connection state management
+
+  API Endpoints:
+  - POST /commands - Send commands to cars (heating, service mode)
+  - GET /health - Health check endpoint
+
+  WebSocket Protocol:
+  - Cars connect via WebSocket to port 8081
+  - Bidirectional communication for data and commands
+  - Automatic reconnection handling
+  - License plate-based authentication
+
+  Built with:
+  - Node.js with WebSocket (ws library)
+  - Express.js for REST API
+  - MongoDB client for data storage
+  - Redis for pub/sub messaging
+  - MQTT client for cloud integration
+  - Ports: 3002 (HTTP), 8081 (WebSocket)
+
+  Main files:
+  - server.js (WebSocket and REST server)
+  - package.json
+
+  Extra:
+  - Acts as the central hub for all car-to-cloud communication
+  - Handles both real-time data ingestion and command distribution
+  - Scalable architecture with Redis for multi-instance deployment
+
+linkingProjects:
+  - ../B3-realtime-database
+  - ../../C-car-demo-in-car (cars connect here)
+
+extraInfo: []
