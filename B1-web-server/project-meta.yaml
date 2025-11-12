@@ -36,3 +36,6 @@ linkingProjects:
 
 extraInfo:
   - ./API_DOCS.md
+
+github_owner_repo: kai-rasilainen/B-car-demo-backend
+github_label: B1-web-server

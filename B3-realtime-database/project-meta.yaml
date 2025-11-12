@@ -50,3 +50,6 @@ linkingProjects:
   - ../B2-iot-gateway
 
 extraInfo: []
+
+github_owner_repo: kai-rasilainen/B-car-demo-backend
+github_label: B3-realtime-database

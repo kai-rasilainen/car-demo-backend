@@ -58,3 +58,6 @@ linkingProjects:
   - ../B1-web-server
 
 extraInfo: []
+
+github_owner_repo: kai-rasilainen/B-car-demo-backend
+github_label: B4-static-database
